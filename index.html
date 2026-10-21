@@ -3054,13 +3054,39 @@ function setPose(P){ camera.position.copy(P.p); orbit.target.copy(P.t); camera.l
 function animate(dur, fn){ return new Promise(res => { anim = {t0:performance.now(), dur, fn, res}; }); }
 const wait = ms => new Promise(r => setTimeout(r, ms));
 function flyTo(B, dur = 900){ fly = {t0:performance.now(), dur, A:curPose(), B}; }
-function flyToRoom(id){
-  const r = ROOMS.find(r => r.id === id), xs = r.poly.map(p => p[0]), ys = r.poly.map(p => p[1]);
-  const t = new THREE.Vector3(wx((Math.min(...xs)+Math.max(...xs))/2), .6, wz((Math.min(...ys)+Math.max(...ys))/2));
-  const size = M(Math.max(Math.max(...xs)-Math.min(...xs), Math.max(...ys)-Math.min(...ys)));
-  const dir = camera.position.clone().sub(orbit.target).setY(0); if (dir.lengthSq() < .01) dir.set(.6, 0, .8); dir.normalize();
-  const dist = size*1.3 + 2.2;
-  flyTo(pose(t, new THREE.Vector3(t.x + dir.x*dist*.7, dist*1.05, t.z + dir.z*dist*.7)));
+function flyToRoom(id) {
+  // 1. 如果传入的是 ID 字符串则去找组件对象，如果是对象则直接使用
+  const f = (typeof id === 'string') ? getF(id) : id;
+  if (!f) return;
+
+  // 2. 将房间中心坐标点与尺寸转换为 3D 米坐标 (m)
+  // 优先匹配已生成的 3D Mesh 世界坐标（避免偏移），备用计算使用 f.cx / 1000
+  const roomMesh = typeof furnG !== 'undefined' ? furnG.children.find(c => c.userData?.fid === f.id) : null;
+  const tx = roomMesh ? roomMesh.position.x : f.cx / 1000;
+  const tz = roomMesh ? roomMesh.position.z : f.cy / 1000;
+  const t = new THREE.Vector3(tx, 0.6, tz);
+
+  // 3. 计算房间包围盒最大边长 (mm 转 m)
+  const roomW = (f.w || 2000) / 1000;
+  const roomD = (f.d || 2000) / 1000;
+  const size = Math.max(roomW, roomD);
+
+  // 4. 保持相机当前的视角方向（平滑飞入）
+  const orbitTarget = (typeof orbit !== 'undefined' && orbit.target) ? orbit.target : (controls ? controls.target : new THREE.Vector3());
+  const dir = camera.position.clone().sub(orbitTarget).setY(0);
+  if (dir.lengthSq() < 0.01) dir.set(0.6, 0, 0.8);
+  dir.normalize();
+
+  // 5. 根据房间尺寸计算合适的镜头对焦距离
+  const dist = size * 1.3 + 2.2;
+  const camPos = new THREE.Vector3(t.x + dir.x * dist * 0.7, dist * 1.05, t.z + dir.z * dist * 0.7);
+
+  // 6. 执行视角动画（兼容 pose 函数）
+  if (typeof pose === 'function') {
+    flyTo(pose(t, camPos));
+  } else {
+    flyTo({ target: t, position: camPos });
+  }
 }
 
 /* ======================= 进入 / 退出 3D ======================= */
