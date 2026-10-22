@@ -474,15 +474,15 @@ const LIB = [
   {cat:'结构', items:[['stairs','楼梯',2020,2900,'#cdb79a']]},
   {cat:'结构与墙体', items:[
     ['wall_b','承重墙 (200mm)',2000,200,'#26241f'],
-    ['wall_n','隔墙 (100mm)',1500,100,'#a7a195'],
-    ['wall_e','外墙 (200mm)',2000,200,'#8f897d'],
+    ['wall_n','隔墙',1500,100,'#a7a195'],
+    ['wall_e','外墙',2000,200,'#8f897d'],
     ['wall_low','矮墙 (100mm)',1200,100,'#e9e3d8']
   ]},
   {cat:'门窗与结构', items:[
     ['win_std','标准窗',1200,200,'#f7fbfd'],
     ['win_large','落地窗',1800,200,'#f7fbfd'],
     ['win_bay','飘窗',2000,450,'#f7fbfd'],
-    ['door_single','平开门 (0.9m)',900,200,'#efe6d8']
+    ['door_single','平开门',900,200,'#efe6d8']
   ]},
   {cat:'房间与区域', items:[
     ['room_rect','客厅区域',4000,5000,'#f2ece2'],
@@ -509,14 +509,14 @@ function defaultFurniture() {
     { id: "fmvhv0amk1", type: "room_rect", name: "飘窗区域", cx: 1890, cy: 6170, w: 2330, d: 780, rot: 0, color: "#f2ece2", mat: "marble" },
     { id: "fmvhhilzh17", type: "win_bay", name: "飘窗", cx: 8080, cy: 6085, w: 2590, d: 940, rot: 0, color: "#f7fbfd" },
     { id: "fmvhjqwnu1", type: "nightstand", name: "床头柜", cx: 5345, cy: 4605, w: 2100, d: 530, rot: 90, color: "#e8dccb" },
-    { id: "fmvhij0vv5", type: "room_rect", name: "厨房区域", cx: 4330, cy: 645, w: 1730, d: 3020, rot: 270, color: "#f2ece2" },
+    { id: "fmvhij0vv5", type: "room_rect", name: "厨房区域", cx: 4330, cy: 645, w: 1730, d: 3020, rot: 270, color: "#f2ece2", mat: "tile800" },
     { id: "fmvhiokzh1", type: "room_rect", name: "过道区域", cx: 3715, cy: 2075, w: 4260, d: 1150, rot: 0, color: "#f2ece2", mat: "tile800" },
-    { id: "fmvhjc9o522", type: "room_rect", name: "卧室区域", cx: 815, cy: 2110, w: 1640, d: 1220, rot: 0, color: "#f2ece2" },
-    { id: "fmvhjatnx21", type: "room_rect", name: "卧室区域", cx: 1535, cy: 4240, w: 3140, d: 3050, rot: 0, color: "#f2ece2" },
-    { id: "fmvhj67xw18", type: "room_rect", name: "卧室区域", cx: 4455, cy: 4185, w: 2700, d: 2950, rot: 0, color: "#f2ece2" },
-    { id: "fmvhiw1eh5", type: "room_rect", name: "餐厅区域", cx: 7555, cy: 1515, w: 3420, d: 2270, rot: 0, color: "#f2ece2" },
-    { id: "fmvhim5271", type: "room_rect", name: "入户区域", cx: 6490, cy: -820, w: 1290, d: 2420, rot: 0, color: "#f2ece2" },
-    { id: "fmvhhy1zf1", type: "room_rect", name: "客厅区域", cx: 7550, cy: 4140, w: 3460, d: 2970, rot: 0, color: "#f2ece2" },
+    { id: "fmvhjc9o522", type: "room_rect", name: "卧室区域", cx: 815, cy: 2110, w: 1640, d: 1220, rot: 0, color: "#f2ece2", mat: "tile800" },
+    { id: "fmvhjatnx21", type: "room_rect", name: "卧室区域", cx: 1535, cy: 4240, w: 3140, d: 3050, rot: 0, color: "#f2ece2", mat: "tile800" },
+    { id: "fmvhj67xw18", type: "room_rect", name: "卧室区域", cx: 4455, cy: 4185, w: 2700, d: 2950, rot: 0, color: "#f2ece2", mat: "tile800" },
+    { id: "fmvhiw1eh5", type: "room_rect", name: "餐厅区域", cx: 7555, cy: 1515, w: 3420, d: 2270, rot: 0, color: "#f2ece2", mat: "tile800" },
+    { id: "fmvhim5271", type: "room_rect", name: "入户区域", cx: 6490, cy: -820, w: 1290, d: 2420, rot: 0, color: "#f2ece2", mat: "tile800" },
+    { id: "fmvhhy1zf1", type: "room_rect", name: "客厅区域", cx: 7550, cy: 4140, w: 3460, d: 2970, rot: 0, color: "#f2ece2", mat: "tile800" },
     { id: "fmvhi0kfw3", type: "room_rect", name: "卫生间区域", cx: 1397.5, cy: 626.5, w: 2820, d: 1710, rot: 0, color: "#f2ece2", mat: "antislip" },
     { id: "fmvgdrw301", type: "bed", name: "双人床", cx: 1000, cy: 4700, w: 1500, d: 2000, rot: -90, color: "#c9d6df" },
     { id: "fmvgdrw303", type: "wardrobe", name: "衣柜", cx: 790, cy: 1772, w: 1600, d: 450, rot: 0, color: "#efe6d8" },
@@ -550,43 +550,43 @@ function defaultFurniture() {
     { id: "fmvghkvjb4", type: "wardrobe", name: "小衣柜", cx: 7012, cy: -820, w: 2410, d: 270, rot: 90, color: "#efe6d8" },
     { id: "fmvghlcj35", type: "wardrobe", name: "衣柜", cx: 7545, cy: 594, w: 1330, d: 410, rot: 0, color: "#efe6d8" },
     { id: "fmvghyk8y1", type: "island", name: "岛台", cx: 4635, cy: 1215, w: 2420, d: 570, rot: 180, color: "#e9e5de" },
-    { id: "fmvhh5elj2", type: "wall_e", name: "外墙 (200mm)", cx: 440, cy: -330, w: 910, d: 200, rot: 0, color: "#8f897d" },
-    { id: "fmvhh75u03", type: "win_std", name: "标准窗 (1.2m)", cx: 1295, cy: -330, w: 800, d: 200, rot: 0, color: "#f7fbfd" },
-    { id: "fmvhh7mkv4", type: "wall_e", name: "外墙 (200mm)", cx: 2680, cy: -330, w: 1960, d: 200, rot: 0, color: "#8f897d" },
-    { id: "fmvhh7xrs5", type: "win_std", name: "标准窗 (1.2m)", cx: 4070, cy: -330, w: 800, d: 200, rot: 0, color: "#f7fbfd" },
-    { id: "fmvhh8bkg6", type: "wall_e", name: "外墙 (200mm)", cx: 5055, cy: -330, w: 1200, d: 200, rot: 0, color: "#8f897d" },
-    { id: "fmvhh8uqw7", type: "wall_e", name: "外墙 (200mm)", cx: 5750, cy: -500, w: 530, d: 200, rot: 270, color: "#8f897d" },
-    { id: "fmvhh9nf58", type: "win_std", name: "标准窗 (1.2m)", cx: 5750, cy: -1170, w: 800, d: 200, rot: 270, color: "#f7fbfd" },
-    { id: "fmvhha8y19", type: "wall_e", name: "外墙 (200mm)", cx: 5750, cy: -1900, w: 660, d: 210, rot: 270, color: "#8f897d" },
-    { id: "fmvhhb5nd10", type: "door_single", name: "平开门 (0.9m)", cx: 6310, cy: -2130, w: 900, d: 200, rot: 0, color: "#efe6d8" },
-    { id: "fmvhhbxsy11", type: "wall_e", name: "外墙 (200mm)", cx: 7065, cy: -2130, w: 600, d: 210, rot: 0, color: "#8f897d" },
-    { id: "fmvhhdvhn12", type: "wall_e", name: "外墙 (200mm)", cx: 7250, cy: -820, w: 2410, d: 220, rot: 90, color: "#8f897d" },
-    { id: "fmvhhehst13", type: "wall_e", name: "外墙 (200mm)", cx: 8400, cy: 290, w: 2080, d: 200, rot: 0, color: "#8f897d" },
-    { id: "fmvhheq3014", type: "wall_e", name: "外墙 (200mm)", cx: 9350, cy: 3190, w: 5600, d: 180, rot: 90, color: "#8f897d" },
-    { id: "fmvhhjt8d18", type: "wall_e", name: "外墙 (200mm)", cx: 5700, cy: 5730, w: 1790, d: 200, rot: 0, color: "#8f897d" },
-    { id: "fmvhhk2gf19", type: "wall_e", name: "外墙 (200mm)", cx: 6700, cy: 6090, w: 920, d: 200, rot: 270, color: "#8f897d" },
-    { id: "fmvhhreax1", type: "win_std", name: "标准窗 (1.2m)", cx: 4180, cy: 5730, w: 1250, d: 200, rot: 0, color: "#f7fbfd" },
+    { id: "fmvhh5elj2", type: "wall_e", name: "外墙", cx: 440, cy: -330, w: 910, d: 200, rot: 0, color: "#8f897d" },
+    { id: "fmvhh75u03", type: "win_std", name: "标准窗", cx: 1295, cy: -330, w: 800, d: 200, rot: 0, color: "#f7fbfd" },
+    { id: "fmvhh7mkv4", type: "wall_e", name: "外墙", cx: 2680, cy: -330, w: 1960, d: 200, rot: 0, color: "#8f897d" },
+    { id: "fmvhh7xrs5", type: "win_std", name: "标准窗", cx: 4070, cy: -330, w: 800, d: 200, rot: 0, color: "#f7fbfd" },
+    { id: "fmvhh8bkg6", type: "wall_e", name: "外墙", cx: 5055, cy: -330, w: 1200, d: 200, rot: 0, color: "#8f897d" },
+    { id: "fmvhh8uqw7", type: "wall_e", name: "外墙", cx: 5750, cy: -500, w: 530, d: 200, rot: 270, color: "#8f897d" },
+    { id: "fmvhh9nf58", type: "win_std", name: "标准窗", cx: 5750, cy: -1170, w: 800, d: 200, rot: 270, color: "#f7fbfd" },
+    { id: "fmvhha8y19", type: "wall_e", name: "外墙", cx: 5750, cy: -1900, w: 660, d: 210, rot: 270, color: "#8f897d" },
+    { id: "fmvhhb5nd10", type: "door_single", name: "平开门", cx: 6310, cy: -2130, w: 900, d: 200, rot: 0, color: "#efe6d8" },
+    { id: "fmvhhbxsy11", type: "wall_e", name: "外墙", cx: 7065, cy: -2130, w: 600, d: 210, rot: 0, color: "#8f897d" },
+    { id: "fmvhhdvhn12", type: "wall_e", name: "外墙", cx: 7250, cy: -820, w: 2410, d: 220, rot: 90, color: "#8f897d" },
+    { id: "fmvhhehst13", type: "wall_e", name: "外墙", cx: 8400, cy: 290, w: 2080, d: 200, rot: 0, color: "#8f897d" },
+    { id: "fmvhheq3014", type: "wall_e", name: "外墙", cx: 9350, cy: 3190, w: 5600, d: 180, rot: 90, color: "#8f897d" },
+    { id: "fmvhhjt8d18", type: "wall_e", name: "外墙", cx: 5700, cy: 5730, w: 1790, d: 200, rot: 0, color: "#8f897d" },
+    { id: "fmvhhk2gf19", type: "wall_e", name: "外墙", cx: 6700, cy: 6090, w: 920, d: 200, rot: 270, color: "#8f897d" },
+    { id: "fmvhhreax1", type: "win_std", name: "标准窗", cx: 4180, cy: 5730, w: 1250, d: 200, rot: 0, color: "#f7fbfd" },
     { id: "fmvhhzfi52", type: "table", name: "餐桌", cx: 8020, cy: 1760, w: 1400, d: 800, rot: 90, color: "#e2cfb4" },
-    { id: "fmvhib3sw1", type: "wall_n", name: "隔墙 (100mm)", cx: 2820, cy: 640, w: 1730, d: 100, rot: 270, color: "#a7a195" },
-    { id: "fmvhid8o12", type: "door_single", name: "平开门 (0.9m)", cx: 2320, cy: 1500, w: 885, d: 200, rot: 180, color: "#efe6d8" },
-    { id: "fmvhieo613", type: "wall_n", name: "隔墙 (100mm)", cx: 930, cy: 1490, w: 1890, d: 100, rot: 0, color: "#a7a195" },
-    { id: "fmvhigjoa4", type: "wall_e", name: "外墙 (200mm)", cx: -110, cy: 2580, w: 6020, d: 200, rot: 90, color: "#8f897d" },
-    { id: "fmvhiouv12", type: "wall_n", name: "隔墙 (100mm)", cx: 1640, cy: 2100, w: 1110, d: 100, rot: 90, color: "#a7a195" },
-    { id: "fmvhiq81j3", type: "wall_n", name: "隔墙 (100mm)", cx: 5030, cy: 2700, w: 1630, d: 100, rot: 0, color: "#a7a195" },
-    { id: "fmvhir5l24", type: "wall_n", name: "隔墙 (100mm)", cx: 5800, cy: 4200, w: 2890, d: 100, rot: 270, color: "#a7a195" },
-    { id: "fmvhiww146", type: "door_single", name: "平开门 (0.9m)", cx: 3760, cy: 2710, w: 900, d: 200, rot: 0, color: "#efe6d8" },
-    { id: "fmvhix8cn7", type: "wall_n", name: "隔墙 (100mm)", cx: 3100, cy: 2700, w: 430, d: 100, rot: 0, color: "#a7a195" },
-    { id: "fmvhixm1l8", type: "wall_n", name: "隔墙 (100mm)", cx: 3110, cy: 4210, w: 2910, d: 100, rot: 90, color: "#a7a195" },
-    { id: "fmvhiyrig9", type: "wall_n", name: "隔墙 (100mm)", cx: 2840, cy: 5690, w: 430, d: 110, rot: 0, color: "#a7a195" },
-    { id: "fmvhiz4ux10", type: "wall_e", name: "外墙 (200mm)", cx: 3305, cy: 5730, w: 490, d: 200, rot: 0, color: "#8f897d" },
-    { id: "fmvhj02j511", type: "wall_e", name: "外墙 (200mm)", cx: 3160, cy: 6205, w: 740, d: 200, rot: 90, color: "#8f897d" },
-    { id: "fmvhj0ncp12", type: "wall_e", name: "外墙 (200mm)", cx: 2730, cy: 6480, w: 530, d: 200, rot: 0, color: "#8f897d" },
+    { id: "fmvhib3sw1", type: "wall_n", name: "隔墙", cx: 2820, cy: 640, w: 1730, d: 100, rot: 270, color: "#a7a195" },
+    { id: "fmvhid8o12", type: "door_single", name: "平开门", cx: 2320, cy: 1500, w: 885, d: 200, rot: 180, color: "#efe6d8" },
+    { id: "fmvhieo613", type: "wall_n", name: "隔墙", cx: 930, cy: 1490, w: 1890, d: 100, rot: 0, color: "#a7a195" },
+    { id: "fmvhigjoa4", type: "wall_e", name: "外墙", cx: -110, cy: 2580, w: 6020, d: 200, rot: 90, color: "#8f897d" },
+    { id: "fmvhiouv12", type: "wall_n", name: "隔墙", cx: 1640, cy: 2100, w: 1110, d: 100, rot: 90, color: "#a7a195" },
+    { id: "fmvhiq81j3", type: "wall_n", name: "隔墙", cx: 5030, cy: 2700, w: 1630, d: 100, rot: 0, color: "#a7a195" },
+    { id: "fmvhir5l24", type: "wall_n", name: "隔墙", cx: 5800, cy: 4200, w: 2890, d: 100, rot: 270, color: "#a7a195" },
+    { id: "fmvhiww146", type: "door_single", name: "平开门", cx: 3760, cy: 2710, w: 900, d: 200, rot: 0, color: "#efe6d8" },
+    { id: "fmvhix8cn7", type: "wall_n", name: "隔墙", cx: 3100, cy: 2700, w: 430, d: 100, rot: 0, color: "#a7a195" },
+    { id: "fmvhixm1l8", type: "wall_n", name: "隔墙", cx: 3110, cy: 4210, w: 2910, d: 100, rot: 90, color: "#a7a195" },
+    { id: "fmvhiyrig9", type: "wall_n", name: "隔墙", cx: 2840, cy: 5690, w: 430, d: 110, rot: 0, color: "#a7a195" },
+    { id: "fmvhiz4ux10", type: "wall_e", name: "外墙", cx: 3305, cy: 5730, w: 490, d: 200, rot: 0, color: "#8f897d" },
+    { id: "fmvhj02j511", type: "wall_e", name: "外墙", cx: 3160, cy: 6205, w: 740, d: 200, rot: 90, color: "#8f897d" },
+    { id: "fmvhj0ncp12", type: "wall_e", name: "外墙", cx: 2730, cy: 6480, w: 530, d: 200, rot: 0, color: "#8f897d" },
     { id: "fmvhj1vo113", type: "win_bay", name: "飘窗", cx: 1885, cy: 6165, w: 2340, d: 810, rot: 0, color: "#f7fbfd" },
-    { id: "fmvhj28cc14", type: "wall_e", name: "外墙 (200mm)", cx: 620, cy: 6180, w: 790, d: 200, rot: 90, color: "#8f897d" },
-    { id: "fmvhj44fn15", type: "wall_e", name: "外墙 (200mm)", cx: 255, cy: 5690, w: 930, d: 200, rot: 0, color: "#8f897d" },
-    { id: "fmvhj79zf19", type: "wall_n", name: "隔墙 (100mm)", cx: 1780, cy: 2700, w: 390, d: 100, rot: 0, color: "#a7a195" },
-    { id: "fmvhj81tg20", type: "door_single", name: "平开门 (0.9m)", cx: 2430, cy: 2710, w: 900, d: 200, rot: 0, color: "#efe6d8" },
-    { id: "fmvhjdhqe23", type: "wall_n", name: "隔墙 (100mm)", cx: 2985, cy: 1550, w: 430, d: 100, rot: 0, color: "#a7a195" },
+    { id: "fmvhj28cc14", type: "wall_e", name: "外墙", cx: 620, cy: 6180, w: 790, d: 200, rot: 90, color: "#8f897d" },
+    { id: "fmvhj44fn15", type: "wall_e", name: "外墙", cx: 255, cy: 5690, w: 930, d: 200, rot: 0, color: "#8f897d" },
+    { id: "fmvhj79zf19", type: "wall_n", name: "隔墙", cx: 1780, cy: 2700, w: 390, d: 100, rot: 0, color: "#a7a195" },
+    { id: "fmvhj81tg20", type: "door_single", name: "平开门", cx: 2430, cy: 2710, w: 900, d: 200, rot: 0, color: "#efe6d8" },
+    { id: "fmvhjdhqe23", type: "wall_n", name: "隔墙", cx: 2985, cy: 1550, w: 430, d: 100, rot: 0, color: "#a7a195" },
     { id: "fmvhmsnws1", type: "plant", name: "绿植", cx: 8020, cy: 1400, w: 500, d: 500, rot: 0, color: "#a9c39b" },
     { id: "fmvhmtgbp2", type: "floorlamp", name: "落地灯", cx: 2790, cy: 5350, w: 450, d: 450, rot: 0, color: "#3d3a34" },
     { id: "fmvhmujoc3", type: "plant", name: "绿植", cx: 5540, cy: 1220, w: 500, d: 500, rot: 0, color: "#a9c39b" },
@@ -826,22 +826,98 @@ function furnSVG(t,w,d,c){
 
 /* ======================= 渲染 ======================= */
 const NOLABEL = ['plant','floorlamp','sidetable','barstool','beanbag'];
-function renderRooms(){
-  let s = '';
-  ROOMS.forEach(r => s += `<polygon class="room" data-room="${r.id}" points="${r.poly.map(p=>p.join(',')).join(' ')}" fill="url(#m-${state.rooms[r.id].mat})"/>`);
-  const sill = ([a,b,c,d]) => `<rect x="${a}" y="${b}" width="${c-a}" height="${d-b}" fill="#e2dacb" stroke="#b9b0a0" stroke-width="1" vector-effect="non-scaling-stroke" pointer-events="none"/>`;
-  DOORS.forEach(d => s += sill(d.rect)); SLIDES.forEach(d => s += sill(d.rect));
-  $('#gRooms').innerHTML = s;
+// 1. 房间底色渲染
+function renderRooms() {
+  const g = document.getElementById('gRooms');
+  if (!g) return;
+
+  // 如果房间按钮关了，就不渲染底色，或者隐藏图层
+  const isShow = ui.layers.labels !== false;
+  g.setAttribute('display', isShow ? 'inline' : 'none');
+
+  if (!isShow) {
+    g.innerHTML = '';
+    return;
+  }
+
+  // 获取房间矩形或多边形区域
+  const roomItems = state.furniture.filter(f => f.type === 'room_rect');
+  g.innerHTML = roomItems.map(f => {
+    const matKey = f.mat || 'tile800';
+    const fillAttr = f.mat ? `url(#m-${matKey})` : (f.color || '#f2ece2');
+    return `
+      <g class="room-region" data-fid="${f.id}">
+        <rect 
+          transform="translate(${f.cx} ${f.cy}) rotate(${f.rot || 0})" 
+          x="${-f.w / 2}" 
+          y="${-f.d / 2}" 
+          width="${f.w}" 
+          height="${f.d}" 
+          fill="${fillAttr}" 
+          stroke="none"
+          pointer-events="all" 
+        />
+      </g>
+    `;
+  }).join('');
 }
 
-function renderFurn(){
-  const g = $('#gFurn');
-  g.setAttribute('display', ui.layers.furn ? 'inline' : 'none');
-  g.innerHTML = state.furniture.map(f => {
-    const fs = Math.max(80, Math.min(170, Math.min(f.w,f.d)*.2));
-    const label = Math.min(f.w,f.d) >= 380 && !NOLABEL.includes(f.type)
-      ? `<text transform="rotate(${-f.rot})" font-size="${fs}" text-anchor="middle" dominant-baseline="central" fill="#4a443c" opacity=".8" pointer-events="none">${esc(nm(f.name))}</text>` : '';
-    return `<g class="furn" data-fid="${f.id}" transform="translate(${f.cx} ${f.cy}) rotate(${f.rot})">${furnSVG(f.type,f.w,f.d,f.color)}${label}</g>`;
+// 2. 房间名称与面积文字渲染
+function renderLabels(){
+  const g = $('#gLabels');
+  if (!g) return;
+  // 受 ui.layers.labels（“房间”Toggle按钮）统一控制显示/隐藏
+  const isShow = (typeof ui !== 'undefined' && ui.layers) ? ui.layers.labels !== false : true;
+  g.setAttribute('display', isShow ? 'inline' : 'none');
+  if (!isShow) { g.innerHTML = ''; return; }
+
+  // 提取所有房间区域组件
+  const roomItems = state.furniture.filter(f => f.type === 'room_rect');
+  // 白色描边光晕：确保文字盖在任何深色地砖、地板或家具上都极其清晰
+  const halo = 'stroke="#fbf9f4" stroke-width="35" paint-order="stroke" stroke-linejoin="round"';
+
+  g.innerHTML = roomItems.map(f => {
+    const areaVal = fmt((f.w * f.d) / 1e6);
+    // 根据房间大小自适应字号
+    const fs = Math.max(120, Math.min(200, Math.min(f.w, f.d) * 0.16));
+    const subFs = Math.round(fs * 0.72);
+    return `
+      <g transform="translate(${f.cx} ${f.cy})">
+        <text x="0" y="${-subFs * 0.35}" font-size="${fs}" font-weight="600" text-anchor="middle" dominant-baseline="central" fill="#2b2824" ${halo}>${esc(nm(f.name))}</text>
+        <text x="0" y="${fs * 0.85}" font-size="${subFs}" font-weight="500" text-anchor="middle" dominant-baseline="central" fill="#7d7366" ${halo}>${areaVal} m²</text>
+      </g>
+    `;
+  }).join('');
+}
+
+function renderFurn() {
+  const g = document.getElementById('gFurn');
+  if (!g) return;
+
+  // 容器本身始终保持显示
+  g.setAttribute('display', 'inline');
+
+  // 判断是否为结构/建筑构件（墙体、门、窗等）
+  const isArch = f => 
+    f.type.startsWith('wall_') || 
+    f.type.startsWith('door_') || 
+    f.type.startsWith('win_');
+
+  // 过滤要绘制的元素：
+  // 1. 如果是建筑结构（墙/门/窗），永远绘制；
+  // 2. 如果是纯家具，仅在 ui.layers.furn 为 true 时绘制；
+  // 3. 房间底色（room_rect）交给 renderRooms 处理，不在此处重复绘制。
+  const itemsToDraw = state.furniture.filter(f => {
+    if (f.type === 'room_rect') return false; // 排除房间底色
+    return isArch(f) || ui.layers.furn;
+  });
+
+  g.innerHTML = itemsToDraw.map(f => {
+    const fs = Math.max(80, Math.min(170, Math.min(f.w, f.d) * 0.2));
+    const label = Math.min(f.w, f.d) >= 380 && (!window.NOLABEL || !NOLABEL.includes(f.type))
+      ? `<text transform="rotate(${-f.rot})" font-size="${fs}" text-anchor="middle" dominant-baseline="central" fill="#4a443c" opacity=".8" pointer-events="none">${f.name || ''}</text>` 
+      : '';
+    return `<g class="furn" data-fid="${f.id}" transform="translate(${f.cx} ${f.cy}) rotate(${f.rot})">${furnSVG(f.type, f.w, f.d, f.color)}${label}</g>`;
   }).join('');
 }
 
@@ -888,16 +964,6 @@ function renderOpenings(){
     s += `<path d="M${x-1050} ${y}H${x-50}M${x-250} ${y-155}L${x} ${y}L${x-250} ${y+155}" fill="none" stroke="#b5653a" stroke-width="2" vector-effect="non-scaling-stroke"/>
         <text x="${x-1020}" y="${y-155}" font-size="200" fill="#b5653a">${tr('入户','Entry')}</text>`; }
   $('#gOpen').innerHTML = s;
-}
-
-function renderLabels(){
-  const g = $('#gLabels');
-  g.setAttribute('display', ui.layers.labels ? 'inline' : 'none');
-  g.innerHTML = ROOMS.filter(r => r.at).map(r => {
-    const [x,y] = r.at, halo = 'stroke="#fbf9f4" stroke-width="45" paint-order="stroke" stroke-linejoin="round"';
-    return `<text x="${x}" y="${y}" font-size="250" font-weight="600" text-anchor="middle" fill="#2b2824" ${halo}>${esc(nm(state.rooms[r.id].name))}</text>
-      <text x="${x}" y="${y+260}" font-size="175" text-anchor="middle" fill="#7d7366" ${halo}>${fmt(area(r.poly))} m²</text>`;
-  }).join('');
 }
 
 function renderDims(){
@@ -1778,10 +1844,30 @@ document.querySelectorAll('.menu-pop .btn').forEach(b => b.addEventListener('cli
 document.querySelectorAll('#viewSeg .btn').forEach(b => b.onclick = () => setView(b.dataset.view));
 
 document.querySelectorAll('#tools .btn').forEach(b => b.onclick = () => setTool(b.dataset.tool));
-document.querySelectorAll('#layers .btn').forEach(b => b.onclick = () => {
-  const k = b.dataset.layer; ui.layers[k] = !ui.layers[k]; b.classList.toggle('on', ui.layers[k]);
-  if (k === 'dims') $('#gDims').setAttribute('display', ui.layers.dims ? 'inline' : 'none');
-  else if (k !== 'wallSnap') renderAll();
+document.querySelectorAll('#layers .btn').forEach(b => {
+  b.onclick = () => {
+    const k = b.dataset.layer;
+    // 切换图层布尔状态
+    ui.layers[k] = !ui.layers[k];
+    b.classList.toggle('on', ui.layers[k]);
+
+    // 针对不同图层做对应处理
+    if (k === 'dims') {
+      const g = document.getElementById('gDims');
+      if (g) g.setAttribute('display', ui.layers.dims ? 'inline' : 'none');
+    } else if (k === 'labels') {
+      // 房间名称/面积标签图层
+      const gLabels = document.getElementById('gLabels');
+      if (gLabels) gLabels.setAttribute('display', ui.layers.labels ? 'inline' : 'none');
+      // 如果房间底色也由该按钮控制，需重新渲染房间
+      if (typeof renderRooms === 'function') renderRooms();
+    } else if (k === 'furn') {
+      // 家具图层切换：仅控制纯家具，重新渲染家具
+      if (typeof renderFurn === 'function') renderFurn();
+    } else if (k !== 'wallSnap') {
+      if (typeof renderAll === 'function') renderAll();
+    }
+  };
 });
 $('#zoomIn').onclick = () => zoomCenter(1.25);
 $('#zoomOut').onclick = () => zoomCenter(.8);
@@ -1914,17 +2000,20 @@ function init(){
 
   const pm = new THREE.PMREMGenerator(renderer); envTex = pm.fromScene(new RoomEnvironment(), .04).texture; pm.dispose();
   glassMat = new THREE.MeshPhysicalMaterial({
-    color: 0xffffff,                  // 纯白（无偏色）
+    color: 0xf5fbff,                  // 极微弱的冰青白，让玻璃通透的同时有边缘轮廓感
     transparent: true,
-    opacity: 0.3,                     // 基础透明度
-    roughness: 0.0,                   // 0 粗糙度，产生极其锐利的高光
-    metalness: 0.1,                   // 微量金属感，增强反射
-    ior: 1.5,                         // 玻璃标准折射率
-    reflectivity: 0.9,
-    clearcoat: 1.0,                   // 表面清漆层，强化高光
+    opacity: 0.25,                    // 稍提一点点不透明度，增强质感
+    transmission: 0.9,                // 保持 90% 高透光
+    roughness: 0.0,
+    metalness: 0.05,
+    ior: 1.5,
+    reflectivity: 0.6,
+    clearcoat: 1.0,
     clearcoatRoughness: 0.0,
-    depthWrite: false,                // 关闭深度写入，防止半透明渲染层级冲突发黑
-    side: THREE.FrontSide             // 仅渲染正面，防止内外双面叠加导致发黑
+    depthWrite: false,
+    side: THREE.DoubleSide,
+    envMap: envTex,                   // 保持绑定环境贴图
+    envMapIntensity: 1.0
   });
   wallMat = mat('#f4f1eb', {roughness:.92}); capMat = mat('#34312d', {roughness:.9}); frameMat = mat('#5d6166', {roughness:.5, metalness:.4});
 
@@ -2160,59 +2249,264 @@ function buildFurniture(f){
       g.add(box(w, h, d, mat(c, {roughness: .9}), 0, 0, 0));
       break;
     }
-// ★ 1. 标准窗与落地窗（带有底墙、顶梁、立体框与高质感玻璃）
+    // ★ 1. 标准窗与落地窗：真实铝合金双轨推拉窗（内外两扇、各带拉手、支持左右滑行开闭）
     case 'win_std':
     case 'win_large': {
       const isLarge = f.type === 'win_large';
       const sill = isLarge ? 0.1 : 0.9;  // 落地窗底座 0.1m，标准窗窗台 0.9m
       const head = 2.4;                   // 窗顶高度 2.4m
-      const gh = head - sill;
-      const frameMat = mat('#3a3d40', {metalness: 0.8, roughness: 0.2}); // 暗色铝合金窗框
+      const gh = head - sill;             // 窗洞净高
+      const frameMat = mat('#3a3d40', {metalness: 0.8, roughness: 0.2}); // 铝合金主型材
+      const cm = chrome();
+      const ft = 0.035;                   // 外框厚度 3.5cm
+      const fd = 0.07;                    // 双轨道进深 7cm
+      const sft = 0.03;                   // 窗扇框型材厚度 3cm
+      const sfd = 0.024;                  // 窗扇厚度 2.4cm
 
-      // 窗台下墙体（落地窗除外）
+      // 1. 窗台下墙体（落地窗除外）
       if (!isLarge) {
         g.add(box(w, sill, d, wallMat, 0, 0, 0));
       }
       
-      // 窗户主体框体 (外框)
-      g.add(box(w, gh, .04, frameMat, 0, sill, 0)); 
-      
-      // 中间分割立柱 (2根)
-      const kw = w / 3;
-      [-kw/2, kw/2].forEach(x => g.add(box(.03, gh, .05, frameMat, x, sill, 0)));
-      
-      // 窗户玻璃（带高光与透光效果）
-      g.add(box(w - .06, gh - .06, .01, glassMat, 0, sill + .03, 0));
+      // 2. 双滑轨外主框（上下滑轨 + 左右立框）
+      g.add(box(ft, gh, fd, frameMat, -w/2 + ft/2, sill, 0)); // 左立框
+      g.add(box(ft, gh, fd, frameMat, w/2 - ft/2, sill, 0));  // 右立框
+      g.add(box(w - ft*2, ft, fd, frameMat, 0, sill, 0));     // 下导轨
+      g.add(box(w - ft*2, ft, fd, frameMat, 0, head - ft, 0)); // 上导轨
+
+      // 3. 计算窗扇尺寸（两扇中间有 2.5cm 交错重叠）
+      const innerW = w - ft * 2;
+      const sashW = innerW / 2 + 0.025;   // 窗扇宽度
+      const sashH = gh - ft * 2;          // 窗扇高度
+
+      // 内外轨 Z 轴位置（内轨靠室内部 -Z，外轨靠室外部 +Z）
+      const zInner = -fd / 4;
+      const zOuter = fd / 4;
+
+      // ================= 左窗扇（内轨，点击向右滑开） =================
+      const leftClosedX = -w/2 + ft + sashW/2;
+      const leftOpenX = w/2 - ft - sashW/2 - 0.01; // 向右滑动贴齐
+      const leftPivot = new THREE.Group();
+      leftPivot.position.set(leftClosedX, sill + ft, zInner);
+
+      // 左窗扇边框
+      leftPivot.add(box(sft, sashH, sfd, frameMat, -sashW/2 + sft/2, 0, 0));
+      leftPivot.add(box(sft, sashH, sfd, frameMat, sashW/2 - sft/2, 0, 0));
+      leftPivot.add(box(sashW - sft*2, sft, sfd, frameMat, 0, 0, 0));
+      leftPivot.add(box(sashW - sft*2, sft, sfd, frameMat, 0, sashH - sft, 0));
+
+      // 左窗扇玻璃（关闭阴影阻挡）
+      const leftGlass = new THREE.Mesh(new THREE.BoxGeometry(sashW - sft*2, sashH - sft*2, 0.008), glassMat);
+      leftGlass.position.set(0, sashH/2, 0);
+      leftGlass.castShadow = false; leftGlass.receiveShadow = false;
+      leftPivot.add(leftGlass);
+
+      // 左推拉把手（位于右立边内侧，方便用手往右拉）
+      const lHandleX = sashW/2 - sft - 0.015, lHandleY = sashH * 0.45;
+      const lBase = cyl(0.008, 0.008, 0.012, cm, lHandleX, lHandleY, -sfd/2 - 0.006, 16);
+      lBase.rotation.x = Math.PI / 2;
+      const lLever = box(0.012, 0.08, 0.01, cm, lHandleX, lHandleY, -sfd/2 - 0.014);
+      leftPivot.add(lBase, lLever);
+
+      // 注册左推拉门数据
+      const leftDoorData = {
+        pivot: leftPivot,
+        isSlide: true,
+        x0: leftClosedX,
+        x1: leftOpenX,
+        cur: leftClosedX,
+        open: false
+      };
+      leftPivot.userData.door = leftDoorData;
+      leftPivot.userData.fid = f.id;
+      leftPivot.traverse(child => { child.userData.door = leftDoorData; child.userData.fid = f.id; });
+      g.add(leftPivot);
+      doors.push(leftDoorData);
+      if (window.doors && window.doors !== doors) window.doors.push(leftDoorData);
+
+      // ================= 右窗扇（外轨，点击向左滑开） =================
+      const rightClosedX = w/2 - ft - sashW/2;
+      const rightOpenX = -w/2 + ft + sashW/2 + 0.01; // 向左滑动贴齐
+      const rightPivot = new THREE.Group();
+      rightPivot.position.set(rightClosedX, sill + ft, zOuter);
+
+      // 右窗扇边框
+      rightPivot.add(box(sft, sashH, sfd, frameMat, -sashW/2 + sft/2, 0, 0));
+      rightPivot.add(box(sft, sashH, sfd, frameMat, sashW/2 - sft/2, 0, 0));
+      rightPivot.add(box(sashW - sft*2, sft, sfd, frameMat, 0, 0, 0));
+      rightPivot.add(box(sashW - sft*2, sft, sfd, frameMat, 0, sashH - sft, 0));
+
+      // 右窗扇玻璃
+      const rightGlass = new THREE.Mesh(new THREE.BoxGeometry(sashW - sft*2, sashH - sft*2, 0.008), glassMat);
+      rightGlass.position.set(0, sashH/2, 0);
+      rightGlass.castShadow = false; rightGlass.receiveShadow = false;
+      rightPivot.add(rightGlass);
+
+      // 右推拉把手（位于左立边内侧，方便向左拉动）
+      const rHandleX = -sashW/2 + sft + 0.015, rHandleY = sashH * 0.45;
+      const rBase = cyl(0.008, 0.008, 0.012, cm, rHandleX, rHandleY, -sfd/2 - 0.006, 16);
+      rBase.rotation.x = Math.PI / 2;
+      const rLever = box(0.012, 0.08, 0.01, cm, rHandleX, rHandleY, -sfd/2 - 0.014);
+      rightPivot.add(rBase, rLever);
+
+      // 注册右推拉门数据
+      const rightDoorData = {
+        pivot: rightPivot,
+        isSlide: true,
+        x0: rightClosedX,
+        x1: rightOpenX,
+        cur: rightClosedX,
+        open: false
+      };
+      rightPivot.userData.door = rightDoorData;
+      rightPivot.userData.fid = f.id;
+      rightPivot.traverse(child => { child.userData.door = rightDoorData; child.userData.fid = f.id; });
+      g.add(rightPivot);
+      doors.push(rightDoorData);
+      if (window.doors && window.doors !== doors) window.doors.push(rightDoorData);
+
+      // 4. 窗户顶部过梁墙（与左右墙体完全同色同厚度）
+      if (H > head) {
+        g.add(box(w, H - head, d, wallMat, 0, head, 0));
+      }
       break;
     }
 
-    // ★ 2. 飘窗（带有石材大理石台面、伸出墙面的结构台与三面窗框）
+    // ★ 2. 飘窗（正面大窗三分割：中间大固定观景窗，左右两边带把手且可点击开闭）
     case 'bay_win':
     case 'win_bay': {
       const sill = 0.45;  // 飘窗台高 0.45m
-      const head = 2.4;
+      const head = 2.4;   // 飘窗顶高 2.4m
       const gh = head - sill;
-      const marbleMat = mat('#e8e4dc', {roughness: 0.2});               // 大理石台面
-      const frameMat = mat('#3a3d40', {metalness: 0.8, roughness: 0.2}); // 铝合金窗框
+      const marbleMat = mat('#e8e4dc', {roughness: 0.2}); // 大理石台面
+      const frameMat = mat('#3a3d40', {metalness: 0.8, roughness: 0.2});
+      const cm = chrome();
+      const ft = 0.04;    // 主框架粗细 4cm
+      const frontZ = d/2 - ft/2;
 
-      // 飘窗下部实体结构台
+      // 1. 飘窗底部实体墙台与大理石台面
       g.add(box(w, sill, d, wallMat, 0, 0, 0));
-      
-      // 飘窗大理石台面 (稍凸出外缘)
       g.add(rbox(w + .04, .04, d + .04, marbleMat, 0, sill - .02, 0, .01));
 
-      // 飘窗正面玻璃与框架
-      g.add(box(w, gh, .03, frameMat, 0, sill, d/2 - .015));
-      g.add(box(w - .06, gh - .06, .01, glassMat, 0, sill + .03, d/2 - .015));
+      // 2. 正面大窗尺寸计算：中间大，两边小（边扇宽约 20%~22%）
+      const sideW = Math.min(0.65, Math.max(0.42, w * 0.22)); // 左右开扇宽度
+      const midW = w - sideW * 2;                             // 中间大玻璃宽度
+      const sashW = sideW - ft * 1.5;                         // 活动扇净宽
+      const sashH = gh - ft * 2;                              // 活动扇净高
+      const sft = 0.035;                                      // 窗扇边框粗细
 
-      // 飘窗两侧侧面玻璃与框架
-      [-w/2 + .015, w/2 - .015].forEach(x => {
-        g.add(box(.03, gh, d, frameMat, x, sill, 0));
-        g.add(box(.01, gh - .06, d - .06, glassMat, x, sill + .03, 0));
+      // 正面主外框（上下边框）
+      g.add(box(w, ft, ft, frameMat, 0, sill, frontZ));
+      g.add(box(w, ft, ft, frameMat, 0, head - ft, frontZ));
+      // 正面左右外立边
+      g.add(box(ft, gh - ft*2, ft, frameMat, -w/2 + ft/2, sill + ft, frontZ));
+      g.add(box(ft, gh - ft*2, ft, frameMat, w/2 - ft/2, sill + ft, frontZ));
+      // 正面两根分界立柱（隔开中间大玻璃与左右两扇）
+      g.add(box(ft, gh - ft*2, ft, frameMat, -w/2 + sideW, sill + ft, frontZ));
+      g.add(box(ft, gh - ft*2, ft, frameMat, w/2 - sideW, sill + ft, frontZ));
+
+      // 3. 中间超大固定景观玻璃
+      const midGlass = new THREE.Mesh(new THREE.BoxGeometry(midW - ft, sashH, 0.01), glassMat);
+      midGlass.position.set(0, sill + gh/2, frontZ);
+      midGlass.castShadow = false;
+      midGlass.receiveShadow = false;
+      g.add(midGlass);
+
+      // 4. 左侧可开启平开窗（带把手，支持点击开闭）
+      const leftPivot = new THREE.Group();
+      leftPivot.position.set(-w/2 + ft, sill + ft, frontZ);
+
+      // 左窗扇边框与玻璃
+      leftPivot.add(box(sft, sashH, sft, frameMat, sft/2, 0, 0));
+      leftPivot.add(box(sft, sashH, sft, frameMat, sashW - sft/2, 0, 0));
+      leftPivot.add(box(sashW, sft, sft, frameMat, sashW/2, 0, 0));
+      leftPivot.add(box(sashW, sft, sft, frameMat, sashW/2, sashH - sft, 0));
+      const leftGlass = new THREE.Mesh(new THREE.BoxGeometry(sashW - sft*2, sashH - sft*2, 0.01), glassMat);
+      leftGlass.position.set(sashW/2, sashH/2, 0);
+      leftGlass.castShadow = false;
+      leftGlass.receiveShadow = false;
+      leftPivot.add(leftGlass);
+
+      // 左把手（位于窗扇内侧右缘）
+      const lHandleX = sashW - sft - 0.015, lHandleY = sashH * 0.45;
+      const lBase = cyl(0.01, 0.01, 0.015, cm, lHandleX, lHandleY, -sft/2 - 0.008, 16);
+      lBase.rotation.x = Math.PI / 2;
+      const lLever = box(0.012, 0.075, 0.01, cm, lHandleX, lHandleY - 0.03, -sft/2 - 0.018);
+      leftPivot.add(lBase, lLever);
+
+      // 注册左侧窗扇开闭动画数据（向外旋转开启）
+      const leftDoorData = {
+        pivot: leftPivot,
+        a0: 0,
+        a1: Math.PI * 0.35, // 向外开启约 63 度
+        cur: 0,
+        open: false
+      };
+      leftPivot.userData.door = leftDoorData;
+      leftPivot.userData.fid = f.id;
+      leftPivot.traverse(child => { child.userData.door = leftDoorData; child.userData.fid = f.id; });
+      g.add(leftPivot);
+      doors.push(leftDoorData);
+      if (window.doors && window.doors !== doors) window.doors.push(leftDoorData);
+
+      // 5. 右侧可开启平开窗（带把手，支持点击开闭）
+      const rightPivot = new THREE.Group();
+      rightPivot.position.set(w/2 - ft, sill + ft, frontZ);
+
+      // 右窗扇边框与玻璃（向 -X 轴延伸）
+      rightPivot.add(box(sft, sashH, sft, frameMat, -sft/2, 0, 0));
+      rightPivot.add(box(sft, sashH, sft, frameMat, -sashW + sft/2, 0, 0));
+      rightPivot.add(box(sashW, sft, sft, frameMat, -sashW/2, 0, 0));
+      rightPivot.add(box(sashW, sft, sft, frameMat, -sashW/2, sashH - sft, 0));
+      const rightGlass = new THREE.Mesh(new THREE.BoxGeometry(sashW - sft*2, sashH - sft*2, 0.01), glassMat);
+      rightGlass.position.set(-sashW/2, sashH/2, 0);
+      rightGlass.castShadow = false;
+      rightGlass.receiveShadow = false;
+      rightPivot.add(rightGlass);
+
+      // 右把手（位于窗扇内侧左缘）
+      const rHandleX = -sashW + sft + 0.015, rHandleY = sashH * 0.45;
+      const rBase = cyl(0.01, 0.01, 0.015, cm, rHandleX, rHandleY, -sft/2 - 0.008, 16);
+      rBase.rotation.x = Math.PI / 2;
+      const rLever = box(0.012, 0.075, 0.01, cm, rHandleX, rHandleY - 0.03, -sft/2 - 0.018);
+      rightPivot.add(rBase, rLever);
+
+      // 注册右侧窗扇开闭动画数据（向外对称旋转开启）
+      const rightDoorData = {
+        pivot: rightPivot,
+        a0: 0,
+        a1: -Math.PI * 0.35, // 向外反向开启
+        cur: 0,
+        open: false
+      };
+      rightPivot.userData.door = rightDoorData;
+      rightPivot.userData.fid = f.id;
+      rightPivot.traverse(child => { child.userData.door = rightDoorData; child.userData.fid = f.id; });
+      g.add(rightPivot);
+      doors.push(rightDoorData);
+      if (window.doors && window.doors !== doors) window.doors.push(rightDoorData);
+
+      // 6. 飘窗两侧侧面框架与玻璃
+      const sideDepth = d - ft;
+      [-1, 1].forEach(s => {
+        const sideX = s * (w/2 - ft/2);
+        g.add(box(ft, ft, sideDepth, frameMat, sideX, sill, sideDepth/2 - d/2));
+        g.add(box(ft, ft, sideDepth, frameMat, sideX, head - ft, sideDepth/2 - d/2));
+        g.add(box(ft, gh, ft, frameMat, sideX, sill, -d/2 + ft/2));
+
+        const sideGlass = new THREE.Mesh(new THREE.BoxGeometry(0.01, gh - ft*2, sideDepth - ft), glassMat);
+        sideGlass.position.set(sideX, sill + gh/2, (frontZ - d/2) / 2);
+        sideGlass.castShadow = false;
+        sideGlass.receiveShadow = false;
+        g.add(sideGlass);
       });
+
+      // 7. 顶部过梁墙（与左右墙体完全对齐）
+      if (H > head) {
+        g.add(box(w, H - head, d, wallMat, 0, head, 0));
+      }
       break;
     }
-
     // ★ 3. 平开门（带有完整门套/门框、木纹门板与金属门把手）
     case 'door_single': {
       const h = 2.05; // 门高 2.05m
@@ -2268,6 +2562,9 @@ function buildFurniture(f){
       g.add(pivot);
 
       if (window.doors) window.doors.push(doorData);
+      if (H > h) {
+        g.add(box(w, H - h, d, wallMat, 0, h, 0));
+      }
       break;
     }
     // 房间区域组件
@@ -2893,7 +3190,7 @@ function buildArch(){
     colliders.push([wx(r[0]), wz(r[1]), wx(r[2]), wz(r[3])]);
     const gTop = Math.min(head, top); if (gTop <= sill) return;
     const [x0, y0, x1, y1] = r, hz = (x1-x0) >= (y1-y0), L = M(hz ? x1-x0 : y1-y0), gh = gTop - sill, cx = wx((x0+x1)/2), cz = wz((y0+y1)/2);
-    const pane = new THREE.Mesh(new THREE.BoxGeometry(hz ? L : .01, gh, hz ? .01 : L), glassMat); pane.position.set(cx, sill + gh/2, cz); archUp.add(pane);
+    const pane = new THREE.Mesh(new THREE.BoxGeometry(hz ? L : .01, gh, hz ? .01 : L), glassMat); pane.position.set(cx, sill + gh/2, cz); pane.castShadow = false; pane.receiveShadow = false; archUp.add(pane);
     const n = Math.max(1, Math.round(L/.9));
     for (let k = 0; k <= n; k++){ const t = -L/2 + k*L/n, mu = new THREE.Mesh(new THREE.BoxGeometry(hz ? .04 : .06, gh, hz ? .06 : .04), frameMat);
       mu.position.set(cx + (hz ? t : 0), sill + gh/2, cz + (hz ? 0 : t)); mu.castShadow = true; archUp.add(mu); }
@@ -3139,7 +3436,7 @@ function pick(e){
   const hits = ray.intersectObjects([...(opt.furn ? [furnG] : []), archUp, archFloor], true);
   for (const h of hits){
     let o = h.object;
-    if (o.material === glassMat) continue;
+    if (o.material === glassMat && !o.userData?.door) continue;
     while (o && o !== scene) {
       if (o.userData?.door) {
         return { door: o.userData.door, fid: o.userData.fid, dist: h.distance };
@@ -3333,7 +3630,19 @@ function loop(){
   else if (fly){ const t = clamp01((now - fly.t0)/fly.dur); camTween(fly.A, fly.B, ease(t)); if (t >= 1) fly = null; }
   else if (opt.mode === 'orbit') orbit.update();
   else stepWalk(dt);
-  doors.forEach(d => { const tg = d.open ? d.a1 : d.a0; d.cur += (tg - d.cur) * Math.min(1, dt*6); d.pivot.rotation.y = d.cur; });
+  doors.forEach(d => {
+    if (d.isSlide) {
+      // 平移推拉门窗动画（沿轨道 X 轴平移）
+      const tg = d.open ? d.x1 : d.x0;
+      d.cur += (tg - d.cur) * Math.min(1, dt * 8);
+      d.pivot.position.x = d.cur;
+    } else {
+      // 旋转平开门窗动画（绕合页 Y 轴旋转）
+      const tg = d.open ? d.a1 : d.a0;
+      d.cur += (tg - d.cur) * Math.min(1, dt * 6);
+      d.pivot.rotation.y = d.cur;
+    }
+  });
   updateSel();
   renderer.render(scene, camera);
   labelRenderer.render(scene, camera);
