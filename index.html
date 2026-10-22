@@ -402,14 +402,14 @@ const R = (x0,y0,x1,y1) => [[x0,y0],[x1,y0],[x1,y1],[x0,y1]];
 const ROOMS = [];
 
 const DIMS = [];
-const BOUNDS = {x:-500, y:-2500, w:10500, h:10000};
+const BOUNDS = {x:-500, y:-3400, w:10500, h:11500};
 
 const PLAN = {
   title: {zh:"两室两厅一卫", en:"2BR 2LR 1BA"},
   center: [4500, 2500],
   iso: [5.5, 15.5, 10],
-  walk: {pos:[6400, -1000], look:[6400, 4000], from:{zh:"入户门", en:"the front door"}},
-  entry: [6400, -1800],
+  walk: {pos:[6310, -2850], look:[6310, 2000], from:{zh:"室外大门", en:"outside the front door"}},
+  entry: [6310, -2250],
   lintels: []
 };
 
@@ -961,8 +961,8 @@ function renderOpenings(){
   });
   // 入户标识（箭头尖端在 PLAN.entry）
   if (PLAN.entry){ const [x,y] = PLAN.entry;
-    s += `<path d="M${x-1050} ${y}H${x-50}M${x-250} ${y-155}L${x} ${y}L${x-250} ${y+155}" fill="none" stroke="#b5653a" stroke-width="2" vector-effect="non-scaling-stroke"/>
-        <text x="${x-1020}" y="${y-155}" font-size="200" fill="#b5653a">${tr('入户','Entry')}</text>`; }
+    s += `<path d="M${x} ${y-750}V${y-40}M${x-130} ${y-220}L${x} ${y}L${x+130} ${y-220}" fill="none" stroke="#b5653a" stroke-width="2" vector-effect="non-scaling-stroke"/>
+        <text x="${x}" y="${y-850}" font-size="200" text-anchor="middle" fill="#b5653a">${tr('入户','Entry')}</text>`; }
   $('#gOpen').innerHTML = s;
 }
 
@@ -2236,6 +2236,18 @@ const plate = (g, r, x, y, z) => g.add(lathe([[0, 0], [r*.6, 0], [r*.72, .008], 
 /* ======================= 家具模型（局部坐标：背面朝 -z） ======================= */
 function buildFurniture(f){
   const g = new THREE.Group(), w = M(f.w), d = M(f.d), c = f.color || '#ddd', bz = -d/2, R = rng(Math.round(f.w*7 + f.d*13 + f.cx + f.cy));
+  let hostWall = null, minDist = Infinity;
+  if (f.type.startsWith('win_') || f.type.startsWith('door_') || f.type === 'bay_win') {
+    for (const item of state.furniture) {
+      if (item.type && item.type.startsWith('wall_')) {
+        const dist = Math.hypot(f.cx - item.cx, f.cy - item.cy);
+        if (dist < minDist) { minDist = dist; hostWall = item; }
+      }
+    }
+  }
+  const wallCol = hostWall ? hostWall.color : '#8f897d';
+  const wallDepth = hostWall ? M(hostWall.d) : d; // 接続壁の厚み（100mmまたは200mm）
+  const localWallMat = mat(wallCol, {roughness: 0.9});
   switch (f.type){
     case 'wall_b':
     case 'wall_e':
@@ -2253,121 +2265,81 @@ function buildFurniture(f){
     case 'win_std':
     case 'win_large': {
       const isLarge = f.type === 'win_large';
-      const sill = isLarge ? 0.1 : 0.9;  // 落地窗底座 0.1m，标准窗窗台 0.9m
-      const head = 2.4;                   // 窗顶高度 2.4m
-      const gh = head - sill;             // 窗洞净高
-      const frameMat = mat('#3a3d40', {metalness: 0.8, roughness: 0.2}); // 铝合金主型材
+      const sill = isLarge ? 0.1 : 0.9;
+      const head = 2.4, gh = head - sill;
+      const frameMat = mat('#3a3d40', {metalness: 0.8, roughness: 0.2});
       const cm = chrome();
-      const ft = 0.035;                   // 外框厚度 3.5cm
-      const fd = 0.07;                    // 双轨道进深 7cm
-      const sft = 0.03;                   // 窗扇框型材厚度 3cm
-      const sfd = 0.024;                  // 窗扇厚度 2.4cm
+      const ft = 0.035, fd = 0.07, sft = 0.03, sfd = 0.024;
 
-      // 1. 窗台下墙体（落地窗除外）
+      // 窓台下の腰壁（厚み・色を接続壁と完全一致）
       if (!isLarge) {
-        g.add(box(w, sill, d, wallMat, 0, 0, 0));
+        g.add(box(w, sill, wallDepth, localWallMat, 0, 0, 0));
       }
       
-      // 2. 双滑轨外主框（上下滑轨 + 左右立框）
-      g.add(box(ft, gh, fd, frameMat, -w/2 + ft/2, sill, 0)); // 左立框
-      g.add(box(ft, gh, fd, frameMat, w/2 - ft/2, sill, 0));  // 右立框
-      g.add(box(w - ft*2, ft, fd, frameMat, 0, sill, 0));     // 下导轨
-      g.add(box(w - ft*2, ft, fd, frameMat, 0, head - ft, 0)); // 上导轨
+      g.add(box(ft, gh, fd, frameMat, -w/2 + ft/2, sill, 0));
+      g.add(box(ft, gh, fd, frameMat, w/2 - ft/2, sill, 0));
+      g.add(box(w - ft*2, ft, fd, frameMat, 0, sill, 0));
+      g.add(box(w - ft*2, ft, fd, frameMat, 0, head - ft, 0));
 
-      // 3. 计算窗扇尺寸（两扇中间有 2.5cm 交错重叠）
-      const innerW = w - ft * 2;
-      const sashW = innerW / 2 + 0.025;   // 窗扇宽度
-      const sashH = gh - ft * 2;          // 窗扇高度
+      const innerW = w - ft * 2, sashW = innerW / 2 + 0.025, sashH = gh - ft * 2;
+      const zInner = -fd / 4, zOuter = fd / 4;
 
-      // 内外轨 Z 轴位置（内轨靠室内部 -Z，外轨靠室外部 +Z）
-      const zInner = -fd / 4;
-      const zOuter = fd / 4;
-
-      // ================= 左窗扇（内轨，点击向右滑开） =================
+      // 左窓サッシ
       const leftClosedX = -w/2 + ft + sashW/2;
-      const leftOpenX = w/2 - ft - sashW/2 - 0.01; // 向右滑动贴齐
+      const leftOpenX = w/2 - ft - sashW/2 - 0.01;
       const leftPivot = new THREE.Group();
       leftPivot.position.set(leftClosedX, sill + ft, zInner);
-
-      // 左窗扇边框
       leftPivot.add(box(sft, sashH, sfd, frameMat, -sashW/2 + sft/2, 0, 0));
       leftPivot.add(box(sft, sashH, sfd, frameMat, sashW/2 - sft/2, 0, 0));
       leftPivot.add(box(sashW - sft*2, sft, sfd, frameMat, 0, 0, 0));
       leftPivot.add(box(sashW - sft*2, sft, sfd, frameMat, 0, sashH - sft, 0));
 
-      // 左窗扇玻璃（关闭阴影阻挡）
       const leftGlass = new THREE.Mesh(new THREE.BoxGeometry(sashW - sft*2, sashH - sft*2, 0.008), glassMat);
       leftGlass.position.set(0, sashH/2, 0);
       leftGlass.castShadow = false; leftGlass.receiveShadow = false;
       leftPivot.add(leftGlass);
 
-      // 左推拉把手（位于右立边内侧，方便用手往右拉）
       const lHandleX = sashW/2 - sft - 0.015, lHandleY = sashH * 0.45;
       const lBase = cyl(0.008, 0.008, 0.012, cm, lHandleX, lHandleY, -sfd/2 - 0.006, 16);
       lBase.rotation.x = Math.PI / 2;
       const lLever = box(0.012, 0.08, 0.01, cm, lHandleX, lHandleY, -sfd/2 - 0.014);
       leftPivot.add(lBase, lLever);
 
-      // 注册左推拉门数据
-      const leftDoorData = {
-        pivot: leftPivot,
-        isSlide: true,
-        x0: leftClosedX,
-        x1: leftOpenX,
-        cur: leftClosedX,
-        open: false
-      };
-      leftPivot.userData.door = leftDoorData;
-      leftPivot.userData.fid = f.id;
+      const leftDoorData = { pivot: leftPivot, isSlide: true, x0: leftClosedX, x1: leftOpenX, cur: leftClosedX, open: false };
+      leftPivot.userData.door = leftDoorData; leftPivot.userData.fid = f.id;
       leftPivot.traverse(child => { child.userData.door = leftDoorData; child.userData.fid = f.id; });
-      g.add(leftPivot);
-      doors.push(leftDoorData);
+      g.add(leftPivot); doors.push(leftDoorData);
       if (window.doors && window.doors !== doors) window.doors.push(leftDoorData);
 
-      // ================= 右窗扇（外轨，点击向左滑开） =================
+      // 右窓サッシ
       const rightClosedX = w/2 - ft - sashW/2;
-      const rightOpenX = -w/2 + ft + sashW/2 + 0.01; // 向左滑动贴齐
+      const rightOpenX = -w/2 + ft + sashW/2 + 0.01;
       const rightPivot = new THREE.Group();
       rightPivot.position.set(rightClosedX, sill + ft, zOuter);
-
-      // 右窗扇边框
       rightPivot.add(box(sft, sashH, sfd, frameMat, -sashW/2 + sft/2, 0, 0));
       rightPivot.add(box(sft, sashH, sfd, frameMat, sashW/2 - sft/2, 0, 0));
       rightPivot.add(box(sashW - sft*2, sft, sfd, frameMat, 0, 0, 0));
       rightPivot.add(box(sashW - sft*2, sft, sfd, frameMat, 0, sashH - sft, 0));
 
-      // 右窗扇玻璃
       const rightGlass = new THREE.Mesh(new THREE.BoxGeometry(sashW - sft*2, sashH - sft*2, 0.008), glassMat);
       rightGlass.position.set(0, sashH/2, 0);
       rightGlass.castShadow = false; rightGlass.receiveShadow = false;
       rightPivot.add(rightGlass);
 
-      // 右推拉把手（位于左立边内侧，方便向左拉动）
       const rHandleX = -sashW/2 + sft + 0.015, rHandleY = sashH * 0.45;
       const rBase = cyl(0.008, 0.008, 0.012, cm, rHandleX, rHandleY, -sfd/2 - 0.006, 16);
       rBase.rotation.x = Math.PI / 2;
       const rLever = box(0.012, 0.08, 0.01, cm, rHandleX, rHandleY, -sfd/2 - 0.014);
       rightPivot.add(rBase, rLever);
 
-      // 注册右推拉门数据
-      const rightDoorData = {
-        pivot: rightPivot,
-        isSlide: true,
-        x0: rightClosedX,
-        x1: rightOpenX,
-        cur: rightClosedX,
-        open: false
-      };
-      rightPivot.userData.door = rightDoorData;
-      rightPivot.userData.fid = f.id;
+      const rightDoorData = { pivot: rightPivot, isSlide: true, x0: rightClosedX, x1: rightOpenX, cur: rightClosedX, open: false };
+      rightPivot.userData.door = rightDoorData; rightPivot.userData.fid = f.id;
       rightPivot.traverse(child => { child.userData.door = rightDoorData; child.userData.fid = f.id; });
-      g.add(rightPivot);
-      doors.push(rightDoorData);
-      if (window.doors && window.doors !== doors) window.doors.push(rightDoorData);
+      g.add(rightPivot); doors.push(rightDoorData);
 
-      // 4. 窗户顶部过梁墙（与左右墙体完全同色同厚度）
+      // 窓上部の過梁壁（厚み・色を接続壁と完全一致）
       if (H > head) {
-        g.add(box(w, H - head, d, wallMat, 0, head, 0));
+        g.add(box(w, H - head, wallDepth, localWallMat, 0, head, 0));
       }
       break;
     }
@@ -2375,118 +2347,76 @@ function buildFurniture(f){
     // ★ 2. 飘窗（正面大窗三分割：中间大固定观景窗，左右两边带把手且可点击开闭）
     case 'bay_win':
     case 'win_bay': {
-      const sill = 0.45;  // 飘窗台高 0.45m
-      const head = 2.4;   // 飘窗顶高 2.4m
-      const gh = head - sill;
-      const marbleMat = mat('#e8e4dc', {roughness: 0.2}); // 大理石台面
+      const sill = 0.45, head = 2.4, gh = head - sill;
+      const marbleMat = mat('#e8e4dc', {roughness: 0.2});
       const frameMat = mat('#3a3d40', {metalness: 0.8, roughness: 0.2});
       const cm = chrome();
-      const ft = 0.04;    // 主框架粗细 4cm
-      const frontZ = d/2 - ft/2;
+      const ft = 0.04, frontZ = d/2 - ft/2;
 
-      // 1. 飘窗底部实体墙台与大理石台面
-      g.add(box(w, sill, d, wallMat, 0, 0, 0));
+      g.add(box(w, sill, d, localWallMat, 0, 0, 0));
       g.add(rbox(w + .04, .04, d + .04, marbleMat, 0, sill - .02, 0, .01));
 
-      // 2. 正面大窗尺寸计算：中间大，两边小（边扇宽约 20%~22%）
-      const sideW = Math.min(0.65, Math.max(0.42, w * 0.22)); // 左右开扇宽度
-      const midW = w - sideW * 2;                             // 中间大玻璃宽度
-      const sashW = sideW - ft * 1.5;                         // 活动扇净宽
-      const sashH = gh - ft * 2;                              // 活动扇净高
-      const sft = 0.035;                                      // 窗扇边框粗细
+      const sideW = Math.min(0.65, Math.max(0.42, w * 0.22));
+      const midW = w - sideW * 2, sashW = sideW - ft * 1.5, sashH = gh - ft * 2, sft = 0.035;
 
-      // 正面主外框（上下边框）
       g.add(box(w, ft, ft, frameMat, 0, sill, frontZ));
       g.add(box(w, ft, ft, frameMat, 0, head - ft, frontZ));
-      // 正面左右外立边
       g.add(box(ft, gh - ft*2, ft, frameMat, -w/2 + ft/2, sill + ft, frontZ));
       g.add(box(ft, gh - ft*2, ft, frameMat, w/2 - ft/2, sill + ft, frontZ));
-      // 正面两根分界立柱（隔开中间大玻璃与左右两扇）
       g.add(box(ft, gh - ft*2, ft, frameMat, -w/2 + sideW, sill + ft, frontZ));
       g.add(box(ft, gh - ft*2, ft, frameMat, w/2 - sideW, sill + ft, frontZ));
 
-      // 3. 中间超大固定景观玻璃
       const midGlass = new THREE.Mesh(new THREE.BoxGeometry(midW - ft, sashH, 0.01), glassMat);
       midGlass.position.set(0, sill + gh/2, frontZ);
-      midGlass.castShadow = false;
-      midGlass.receiveShadow = false;
+      midGlass.castShadow = false; midGlass.receiveShadow = false;
       g.add(midGlass);
 
-      // 4. 左侧可开启平开窗（带把手，支持点击开闭）
       const leftPivot = new THREE.Group();
       leftPivot.position.set(-w/2 + ft, sill + ft, frontZ);
-
-      // 左窗扇边框与玻璃
       leftPivot.add(box(sft, sashH, sft, frameMat, sft/2, 0, 0));
       leftPivot.add(box(sft, sashH, sft, frameMat, sashW - sft/2, 0, 0));
       leftPivot.add(box(sashW, sft, sft, frameMat, sashW/2, 0, 0));
       leftPivot.add(box(sashW, sft, sft, frameMat, sashW/2, sashH - sft, 0));
       const leftGlass = new THREE.Mesh(new THREE.BoxGeometry(sashW - sft*2, sashH - sft*2, 0.01), glassMat);
       leftGlass.position.set(sashW/2, sashH/2, 0);
-      leftGlass.castShadow = false;
-      leftGlass.receiveShadow = false;
+      leftGlass.castShadow = false; leftGlass.receiveShadow = false;
       leftPivot.add(leftGlass);
 
-      // 左把手（位于窗扇内侧右缘）
       const lHandleX = sashW - sft - 0.015, lHandleY = sashH * 0.45;
       const lBase = cyl(0.01, 0.01, 0.015, cm, lHandleX, lHandleY, -sft/2 - 0.008, 16);
       lBase.rotation.x = Math.PI / 2;
       const lLever = box(0.012, 0.075, 0.01, cm, lHandleX, lHandleY - 0.03, -sft/2 - 0.018);
       leftPivot.add(lBase, lLever);
 
-      // 注册左侧窗扇开闭动画数据（向外旋转开启）
-      const leftDoorData = {
-        pivot: leftPivot,
-        a0: 0,
-        a1: Math.PI * 0.35, // 向外开启约 63 度
-        cur: 0,
-        open: false
-      };
-      leftPivot.userData.door = leftDoorData;
-      leftPivot.userData.fid = f.id;
+      const leftDoorData = { pivot: leftPivot, a0: 0, a1: Math.PI * 0.35, cur: 0, open: false };
+      leftPivot.userData.door = leftDoorData; leftPivot.userData.fid = f.id;
       leftPivot.traverse(child => { child.userData.door = leftDoorData; child.userData.fid = f.id; });
-      g.add(leftPivot);
-      doors.push(leftDoorData);
+      g.add(leftPivot); doors.push(leftDoorData);
       if (window.doors && window.doors !== doors) window.doors.push(leftDoorData);
 
-      // 5. 右侧可开启平开窗（带把手，支持点击开闭）
       const rightPivot = new THREE.Group();
       rightPivot.position.set(w/2 - ft, sill + ft, frontZ);
-
-      // 右窗扇边框与玻璃（向 -X 轴延伸）
       rightPivot.add(box(sft, sashH, sft, frameMat, -sft/2, 0, 0));
       rightPivot.add(box(sft, sashH, sft, frameMat, -sashW + sft/2, 0, 0));
       rightPivot.add(box(sashW, sft, sft, frameMat, -sashW/2, 0, 0));
       rightPivot.add(box(sashW, sft, sft, frameMat, -sashW/2, sashH - sft, 0));
       const rightGlass = new THREE.Mesh(new THREE.BoxGeometry(sashW - sft*2, sashH - sft*2, 0.01), glassMat);
       rightGlass.position.set(-sashW/2, sashH/2, 0);
-      rightGlass.castShadow = false;
-      rightGlass.receiveShadow = false;
+      rightGlass.castShadow = false; rightGlass.receiveShadow = false;
       rightPivot.add(rightGlass);
 
-      // 右把手（位于窗扇内侧左缘）
       const rHandleX = -sashW + sft + 0.015, rHandleY = sashH * 0.45;
       const rBase = cyl(0.01, 0.01, 0.015, cm, rHandleX, rHandleY, -sft/2 - 0.008, 16);
       rBase.rotation.x = Math.PI / 2;
       const rLever = box(0.012, 0.075, 0.01, cm, rHandleX, rHandleY - 0.03, -sft/2 - 0.018);
       rightPivot.add(rBase, rLever);
 
-      // 注册右侧窗扇开闭动画数据（向外对称旋转开启）
-      const rightDoorData = {
-        pivot: rightPivot,
-        a0: 0,
-        a1: -Math.PI * 0.35, // 向外反向开启
-        cur: 0,
-        open: false
-      };
-      rightPivot.userData.door = rightDoorData;
-      rightPivot.userData.fid = f.id;
+      const rightDoorData = { pivot: rightPivot, a0: 0, a1: -Math.PI * 0.35, cur: 0, open: false };
+      rightPivot.userData.door = rightDoorData; rightPivot.userData.fid = f.id;
       rightPivot.traverse(child => { child.userData.door = rightDoorData; child.userData.fid = f.id; });
-      g.add(rightPivot);
-      doors.push(rightDoorData);
+      g.add(rightPivot); doors.push(rightDoorData);
       if (window.doors && window.doors !== doors) window.doors.push(rightDoorData);
 
-      // 6. 飘窗两侧侧面框架与玻璃
       const sideDepth = d - ft;
       [-1, 1].forEach(s => {
         const sideX = s * (w/2 - ft/2);
@@ -2496,14 +2426,12 @@ function buildFurniture(f){
 
         const sideGlass = new THREE.Mesh(new THREE.BoxGeometry(0.01, gh - ft*2, sideDepth - ft), glassMat);
         sideGlass.position.set(sideX, sill + gh/2, (frontZ - d/2) / 2);
-        sideGlass.castShadow = false;
-        sideGlass.receiveShadow = false;
+        sideGlass.castShadow = false; sideGlass.receiveShadow = false;
         g.add(sideGlass);
       });
 
-      // 7. 顶部过梁墙（与左右墙体完全对齐）
       if (H > head) {
-        g.add(box(w, H - head, d, wallMat, 0, head, 0));
+        g.add(box(w, H - head, d, localWallMat, 0, head, 0));
       }
       break;
     }
@@ -2514,56 +2442,37 @@ function buildFurniture(f){
       const frameMat = mat('#4a3627', {roughness: 0.5});
       const cm = chrome();
 
-      // 1. 固定门框（左右立柱 + 顶梁）
-      g.add(box(.04, h, d, frameMat, -w/2 + .02, 0, 0));
-      g.add(box(.04, h, d, frameMat, w/2 - .02, 0, 0));
-      g.add(box(w, .04, d, frameMat, 0, h - .02, 0));
+      // ドア枠の厚みも接続壁の厚み（wallDepth）に合わせてツライチにする
+      g.add(box(.04, h, wallDepth, frameMat, -w/2 + .02, 0, 0));
+      g.add(box(.04, h, wallDepth, frameMat, w/2 - .02, 0, 0));
+      g.add(box(w, .04, wallDepth, frameMat, 0, h - .02, 0));
 
-      // 2. 可旋转门轴（Pivot，位于门框左侧内部 -w/2 + 0.04）
       const pivot = new THREE.Group();
       pivot.position.set(-w/2 + .04, 0, 0);
 
-      // 3. 门板（宽度 leafW，沿 pivot 的 X 轴从 0 延伸到 leafW）
-      const leafW = w - .08;
-      const leafH = h - .04;
+      const leafW = w - .08, leafH = h - .04;
       const leaf = rbox(leafW, leafH, .04, woodDoorMat, leafW/2, .02, 0, .005);
       pivot.add(leaf);
 
-      // ★ 4. 把手绝对坐标设置（直接挂在 pivot 上）：
-      // X 轴：位于门板右侧锁舌处（离 pivot 门轴距离为 leafW - 0.08m）
-      // Y 轴：离地高度 0.95m（标准把手高度）
-      const handleX = leafW - .08;
-      const handleY = 0.95;
-
+      const handleX = leafW - .08, handleY = 0.95;
       [-.025, .025].forEach(z => {
-        // 底座
         const base = cyl(.015, .015, .015, cm, handleX, handleY, z, 16);
         base.rotation.x = Math.PI / 2;
         pivot.add(base);
-
-        // 横杆（向左延伸 0.1m，握手更顺手）
         const lever = box(.11, .018, .015, cm, handleX - .04, handleY, z > 0 ? z + .01 : z - .01);
         pivot.add(lever);
       });
 
-      // 5. 绑定开门/关门数据
-      const doorData = {
-        pivot: pivot,
-        a0: 0,
-        a1: -Math.PI / 2,
-        cur: f.open ? -Math.PI/2 : 0,
-        open: !!f.open
-      };
+      const doorData = { pivot: pivot, a0: 0, a1: -Math.PI / 2, cur: f.open ? -Math.PI/2 : 0, open: !!f.open };
       pivot.rotation.y = doorData.cur;
-      
-      leaf.userData.door = doorData;
-      leaf.userData.fid = f.id;
-
+      leaf.userData.door = doorData; leaf.userData.fid = f.id;
       g.add(pivot);
 
       if (window.doors) window.doors.push(doorData);
+      
+      // ドア上部の過梁壁（厚み・色を接続壁と完全一致）
       if (H > h) {
-        g.add(box(w, H - h, d, wallMat, 0, h, 0));
+        g.add(box(w, H - h, wallDepth, localWallMat, 0, h, 0));
       }
       break;
     }
@@ -3437,17 +3346,17 @@ function pick(e){
   for (const h of hits){
     let o = h.object;
     if (o.material === glassMat && !o.userData?.door) continue;
-    while (o && o !== scene) {
-      if (o.userData?.door) {
-        return { door: o.userData.door, fid: o.userData.fid, dist: h.distance };
-      }
-      o = o.parent;
+    let door = null, fid = null, room = null, curr = o;
+    while (curr && curr !== scene){
+      if (!door && curr.userData?.door) door = curr.userData.door;
+      if (!fid && curr.userData?.fid) fid = curr.userData.fid;
+      if (!room && curr.userData?.room) room = curr.userData.room;
+      curr = curr.parent;
     }
-    if (o.userData.door) return {door:o.userData.door, dist:h.distance};
-    if (o.userData.room) return {room:o.userData.room};
-    while (o && !o.userData.fid && o !== scene) o = o.parent;
-    if (o?.userData.fid) return {fid:o.userData.fid};
-    return null;                                     // 被墙体挡住
+    if (door) return { door, fid, dist: h.distance };
+    if (fid) return { fid, dist: h.distance };
+    if (room) return { room, dist: h.distance };
+    return null;
   }
   return null;
 }
@@ -3560,7 +3469,20 @@ function stepWalk(dt){
 addEventListener('keydown', e => {
   if (!active || e.target.matches('input,select,textarea')) return;
   keys[e.code] = true;
-  if (opt.mode === 'walk' && e.code === 'KeyE'){ const h = pick(); if (h?.door && h.dist < 2.5) h.door.open = !h.door.open; }
+  if (opt.mode === 'walk' && e.code === 'KeyE'){
+    const h = pick();
+    if (h && h.dist < 3.8) {
+      if (h.door) {
+        h.door.open = !h.door.open;
+      } else if (h.fid) {
+        const winDoors = doors.filter(d => d.pivot?.userData?.fid === h.fid || d.pivot?.children?.some(c => c.userData?.fid === h.fid));
+        if (winDoors.length) {
+          const anyClosed = winDoors.some(d => !d.open);
+          winDoors.forEach(d => d.open = anyClosed);
+        }
+      }
+    }
+  }
 });
 addEventListener('keyup', e => keys[e.code] = false);
 
@@ -3573,7 +3495,7 @@ function syncWalkTexts(){
        tr('点门开关 · 点「退出漫游」回到鸟瞰', 'Tap doors to open · "Exit walk" returns to orbit')]
     : [tr(`点击开始，从${PLAN.walk.from.zh}进入`, `Click to start at ${PLAN.walk.from.en}`),
        tr('<kbd>W</kbd> <kbd>A</kbd> <kbd>S</kbd> <kbd>D</kbd> 移动 · 鼠标转向 · <kbd>Shift</kbd> 快走', '<kbd>W</kbd> <kbd>A</kbd> <kbd>S</kbd> <kbd>D</kbd> move · mouse looks · <kbd>Shift</kbd> runs'),
-       tr('<kbd>E</kbd> 开关正前方的门 · <kbd>Esc</kbd> 暂停', '<kbd>E</kbd> opens the door ahead · <kbd>Esc</kbd> pauses')];
+       tr('<kbd>E</kbd> 开关正前方的门或窗 · <kbd>Esc</kbd> 暂停', '<kbd>E</kbd> opens the door ahead · <kbd>Esc</kbd> pauses')];
   t.forEach((h, i) => $('#wo' + (i + 1)).innerHTML = h);
   syncHint3d();
 }
