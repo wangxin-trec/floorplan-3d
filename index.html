@@ -2055,12 +2055,26 @@ function init(){
     const tap = downAt && Math.hypot(e.clientX-downAt[0], e.clientY-downAt[1]) <= TAP;
     if (look?.id === e.pointerId){
       look = null;
-      if (tap){ const h = pick(e); if (h?.door && h.dist < 3.5) h.door.open = !h.door.open; }   // 漫游时点门开关
+      if (tap){ 
+        const h = pick(e); 
+        if (h && h.dist < 4.5) {
+          const targetF = h.lampFid ? getF(h.lampFid) : (h.fid ? getF(h.fid) : null);
+          if (targetF && (h.lampFid || targetF.type === 'floorlamp')) {
+            toggleLamp(targetF); // 漫游轻点灯具开关
+          } else if (h.door && h.dist < 3.5) {
+            h.door.open = !h.door.open; // 漫游轻点门开闭
+          }
+        }
+      }
       return;
     }
     if (anim || opt.mode !== 'orbit' || !tap) return;
     const h = pick(e);
     if (h?.door) h.door.open = !h.door.open;
+    // ★ 新增点击灯光部件反转开关状态的逻辑
+    else if (h?.lampFid) {
+      toggleLamp(getF(h.lampFid));
+    }
     else if (h?.fid) window.select({kind:'furn', id:h.fid});
     else if (h?.room) window.select({kind:'room', id:h.room});
     else window.select(null);
@@ -3020,6 +3034,29 @@ function buildFurniture(f){
   g.position.set(wx(f.cx), 0, wz(f.cy));
   g.rotation.y = -f.rot * Math.PI/180;       // 平面顺时针旋转 → 绕 Y 轴负向
   g.userData.fid = f.id;
+  g.traverse(o => {
+    const isBasicGlow = o.isMesh && o.material?.type === 'MeshBasicMaterial' && o.material.color.getHex() > 0xeeeeee;
+    const isEmissive = o.isMesh && o.material?.emissiveIntensity > 0;
+    
+    if (isBasicGlow || isEmissive || o.isPointLight) {
+      o.userData.isLamp = true;
+      o.userData.lampFid = f.id;
+      
+      if (o.isMesh) {
+        o.material = o.material.clone(); // 取消材质共享，允许独立开关
+        o.userData.origEmissive = o.material.emissiveIntensity || 0;
+        o.userData.origColor = o.material.color.getHex();
+        
+        // 如果数据记录里这盏灯是关着的，马上应用熄灯效果
+        if (f.lampOff) {
+          if (isEmissive) o.material.emissiveIntensity = 0;
+          if (isBasicGlow) o.material.color.setHex(0x555555); // 变成灰色灯泡
+        }
+      } else if (o.isPointLight) {
+        if (f.lampOff) o.visible = false;
+      }
+    }
+  });
   return g;
 }
 
@@ -3262,8 +3299,11 @@ function applyLight(){
   ground.material.color.set(opt.night ? 0x20242e : 0xf2eee7);
   furnG.traverse(o => {
     if (o.isPointLight && o.userData?.isCeilingLight) {
+      // 查找该光源属于哪个家具对象
+      const parentF = getF(o.userData.lampFid); 
       o.intensity = opt.night ? 3.0 : 0;
-      o.visible = opt.night;
+      // ★ 只有在夜景且该灯没有被手动关闭的情况下，才显示光照
+      o.visible = !!opt.night && (!parentF || !parentF.lampOff);
     }
   });
   lampG.children.forEach(o => { if (o.isPointLight) o.intensity = opt.night ? 6 : 0; else o.material.emissiveIntensity = opt.night ? 2 : .3; });
@@ -3376,7 +3416,26 @@ async function exit(){
   stage.classList.remove('animating');
   grow = furnGrow = 1; applyGrow();
 }
-
+// ★ 通用开关灯函数（视线对准或点击时调用）
+function toggleLamp(targetF){
+  if (!targetF) return;
+  targetF.lampOff = !targetF.lampOff;
+  furnG.traverse(o => {
+    if (o.userData?.lampFid === targetF.id) {
+      if (o.isPointLight) o.visible = opt.night && !targetF.lampOff;
+      if (o.isMesh) {
+        if (targetF.lampOff) {
+          if (o.userData.origEmissive) o.material.emissiveIntensity = 0;
+          if (o.material.type === 'MeshBasicMaterial') o.material.color.setHex(0x555555);
+        } else {
+          if (o.userData.origEmissive) o.material.emissiveIntensity = o.userData.origEmissive;
+          if (o.material.type === 'MeshBasicMaterial') o.material.color.setHex(o.userData.origColor);
+        }
+      }
+    }
+  });
+  if (typeof needRender !== 'undefined') needRender = true;
+}
 /* ======================= 选择 / 拾取 ======================= */
 const ray = new THREE.Raycaster(), ptr = new THREE.Vector2();
 function pick(e){
@@ -3387,14 +3446,18 @@ function pick(e){
   for (const h of hits){
     let o = h.object;
     if (o.material === glassMat && !o.userData?.door) continue;
-    let door = null, fid = null, room = null, curr = o;
+    let door = null, lampFid = null, fid = null, room = null, curr = o;
     while (curr && curr !== scene){
       if (!door && curr.userData?.door) door = curr.userData.door;
+      // ★ 优先识别有没有点中灯具的发光部分
+      if (!lampFid && curr.userData?.isLamp) lampFid = curr.userData.lampFid;
       if (!fid && curr.userData?.fid) fid = curr.userData.fid;
       if (!room && curr.userData?.room) room = curr.userData.room;
       curr = curr.parent;
     }
     if (door) return { door, fid, dist: h.distance };
+    // ★ 如果点中了灯具，返回灯具专属拾取事件
+    if (lampFid) return { lampFid, fid, dist: h.distance };
     if (fid) return { fid, dist: h.distance };
     if (room) return { room, dist: h.distance };
     return null;
@@ -3433,7 +3496,7 @@ function updateSel(){
 const HINT_ORBIT = () => COARSE ? tr('单指旋转 · 双指缩放 / 平移 · 点选家具后可拖动摆放 · 点门开关', '1 finger orbits · 2 fingers zoom / pan · select furniture to drag it · tap doors to open')
   : tr('左键旋转 · 右键平移 · 滚轮缩放 · 选中家具后拖动可摆放 · 点击门开关', 'Left-drag orbits · right-drag pans · scroll zooms · select furniture to drag it · click doors to open');
 const HINT_TOUCHWALK = () => tr('左下摇杆移动 · 拖动画面转向 · 点门开关', 'Joystick moves · drag to look · tap doors to open');
-const HINT_WALK = () => tr('WASD 移动 · 鼠标转向 · Shift 快走 · E 开关门 · Esc 暂停', 'WASD moves · mouse looks · Shift runs · E opens doors · Esc pauses');
+const HINT_WALK = () => tr('WASD 移动 · 鼠标转向 · Shift 快走 · E 开关门窗/灯 · Esc 暂停', 'WASD moves · mouse looks · Shift runs · E toggles doors/lights · Esc pauses');
 function syncHint3d(){ $('#hint3d').textContent = opt.mode === 'orbit' ? HINT_ORBIT() : touchWalk ? HINT_TOUCHWALK() : HINT_WALK(); }
 let touchWalk = false;
 const joy = {x:0, y:0, id:null}, eul = new THREE.Euler(0, 0, 0, 'YXZ');
@@ -3511,11 +3574,20 @@ addEventListener('keydown', e => {
   if (!active || e.target.matches('input,select,textarea')) return;
   keys[e.code] = true;
   if (opt.mode === 'walk' && e.code === 'KeyE'){
-    const h = pick();
-    if (h && h.dist < 3.8) {
-      if (h.door) {
+    const h = pick(); // 准星指向屏幕中央发出的射线
+    if (h && h.dist < 4.5) { // 稍微放宽至 4.5 米，方便抬头够到吸顶灯
+      const targetF = h.lampFid ? getF(h.lampFid) : (h.fid ? getF(h.fid) : null);
+      
+      // ★ 1. 准星对准灯具（或落地灯本体）时按 E 开关灯
+      if (targetF && (h.lampFid || targetF.type === 'floorlamp')) {
+        toggleLamp(targetF);
+      } 
+      // 2. 对准门时开闭门
+      else if (h.door) {
         h.door.open = !h.door.open;
-      } else if (h.fid) {
+      } 
+      // 3. 对准推拉窗时开闭窗
+      else if (h.fid) {
         const winDoors = doors.filter(d => d.pivot?.userData?.fid === h.fid || d.pivot?.children?.some(c => c.userData?.fid === h.fid));
         if (winDoors.length) {
           const anyClosed = winDoors.some(d => !d.open);
@@ -3536,7 +3608,7 @@ function syncWalkTexts(){
        tr('点门开关 · 点「退出漫游」回到鸟瞰', 'Tap doors to open · "Exit walk" returns to orbit')]
     : [tr(`点击开始，从${PLAN.walk.from.zh}进入`, `Click to start at ${PLAN.walk.from.en}`),
        tr('<kbd>W</kbd> <kbd>A</kbd> <kbd>S</kbd> <kbd>D</kbd> 移动 · 鼠标转向 · <kbd>Shift</kbd> 快走', '<kbd>W</kbd> <kbd>A</kbd> <kbd>S</kbd> <kbd>D</kbd> move · mouse looks · <kbd>Shift</kbd> runs'),
-       tr('<kbd>E</kbd> 开关正前方的门或窗 · <kbd>Esc</kbd> 暂停', '<kbd>E</kbd> opens the door ahead · <kbd>Esc</kbd> pauses')];
+       tr('<kbd>E</kbd> 开关正前方的门窗或灯 · <kbd>Esc</kbd> 暂停', '<kbd>E</kbd> toggles doors, windows or lights · <kbd>Esc</kbd> pauses')];
   t.forEach((h, i) => $('#wo' + (i + 1)).innerHTML = h);
   syncHint3d();
 }
